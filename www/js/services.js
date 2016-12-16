@@ -1,50 +1,30 @@
-angular.module('starter.services', [])
-
-.factory('Chats', function() {
-  // Might use a resource here that returns a JSON array
-
-  // Some fake testing data
-  var chats = [{
-    id: 0,
-    name: 'Ben Sparrow',
-    lastText: 'You on your way?',
-    face: 'img/ben.png'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'img/max.png'
-  }, {
-    id: 2,
-    name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
-    face: 'img/adam.jpg'
-  }, {
-    id: 3,
-    name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
-    face: 'img/perry.png'
-  }, {
-    id: 4,
-    name: 'Mike Harrington',
-    lastText: 'This is wicked good ice cream.',
-    face: 'img/mike.png'
-  }];
-
-  return {
-    all: function() {
-      return chats;
-    },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
-    },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
+angular.module('starter.services', []).factory('todoService', function($http) {
+    var baseUrl = 'http://demo.revivalx.com/todolist-api/';
+    return {
+        getAll: function() {
+            return $http.get(baseUrl + 'get_all_tasks.php');
+        },
+        getId: function(taskId) {
+            return $http.get(baseUrl + 'get_task_details.php?taskId=' + taskId);
+        },
+        create: function(datatodo) {
+            body = 'name=' + datatodo.name + '&description=' + datatodo.description;
+            return $http.post(baseUrl + 'create_task.php', body, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8;'
+                }
+            });
+        },
+        update: function(datatodo) {
+            body = 'name=' + datatodo.name + '&description=' + datatodo.description + '&taskId=' + datatodo.taskId;
+            return $http.post(baseUrl + 'update_task.php', body, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8;'
+                }
+            });
+        },
+        delete: function(taskId) {
+            return $http.get(baseUrl + 'delete_task.php?id=' + taskId);
         }
-      }
-      return null;
-    }
-  };
+    };
 });
